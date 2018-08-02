@@ -5,14 +5,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:layout_gravity="bottom"
     tools:background="@color/light_purple">
-    
-    <ImageView
+
+    <FrameLayout
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageButton
         android:id="@+id/vst_center_image"
         android:layout_width="88dp"
         android:layout_height="88dp"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="96dp"
-        android:src="@drawable/large_circle"/>
+        android:backgroundTint="@android:color/transparent"
+        android:onClick="onClick"
+        android:src="@drawable/large_circle" />
+
     
     <ImageView
         android:id="@+id/vst_chat_image"

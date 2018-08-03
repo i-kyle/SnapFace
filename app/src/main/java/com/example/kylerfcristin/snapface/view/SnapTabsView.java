@@ -1,7 +1,6 @@
 package com.example.kylerfcristin.snapface.view;
 
 import android.animation.ArgbEvaluator;
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -21,10 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
-
 import com.example.kylerfcristin.snapface.R;
-import com.example.kylerfcristin.snapface.Singleton.CameraModule;
-import com.example.kylerfcristin.snapface.fragment.EmptyFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -32,10 +28,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.lang.Override;
 
 import static android.content.ContentValues.TAG;
-import static android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;
 
 public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeListener {
 
@@ -45,8 +39,6 @@ public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeL
     private ImageView mBottomImage;
 
     private View mIndicator;
-
-    private Camera mCamera;
 
     private ArgbEvaluator mArgbEvaluator;
 
@@ -71,12 +63,14 @@ public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeL
         init();
     }
 
-    public class PhotoHandler implements Camera.PictureCallback {
+    public interface TakePictureListener {
+        void onTakePicture();
+    }
 
-        @Override
-        public void onPictureTaken(byte[] bytes, Camera camera) {
+    private TakePictureListener takePictureListener;
 
-        }
+    public void setOnTakePictureListener(TakePictureListener listener) {
+        this.takePictureListener = listener;
     }
 
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -142,9 +136,7 @@ public class SnapTabsView extends FrameLayout implements ViewPager.OnPageChangeL
                 new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        mCamera = CameraModule.getInstance();
-                        mCamera.startPreview();
-                        mCamera.takePicture(null, null, mPicture);
+                        takePictureListener.onTakePicture();
                     }
                 }
         );

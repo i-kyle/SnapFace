@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.kylerfcristin.snapface.adapter.MainPagerAdapter;
 import com.example.kylerfcristin.snapface.fragment.EmptyFragment;
+import com.example.kylerfcristin.snapface.view.SnapBrowseView;
 import com.example.kylerfcristin.snapface.view.SnapTabsView;
 
 
@@ -26,7 +27,10 @@ public class MainActivity extends AppCompatActivity {
         final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter); // Every view pager must have adapter'
 
-        SnapTabsView snapTabsView =(SnapTabsView) findViewById(R.id.am_snap_tabs);
+        SnapBrowseView snapBrowseView = (SnapBrowseView) findViewById(R.id.am_snap_browse);
+        snapBrowseView.setUpWithViewPager_Browse(viewPager);
+
+        SnapTabsView snapTabsView = (SnapTabsView) findViewById(R.id.am_snap_tabs);
         snapTabsView.setUpWithViewPager(viewPager);
 
         snapTabsView.setOnTakePictureListener(new SnapTabsView.TakePictureListener() {

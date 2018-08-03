@@ -48,7 +48,7 @@ public class EmptyFragment extends Fragment {
         return fragment;
     }
 
-    class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
+    static class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
         private final String TAG = "Preview";
 
         SurfaceView mSurfaceView;
@@ -56,6 +56,7 @@ public class EmptyFragment extends Fragment {
         Size mPreviewSize;
         List<Size> mSupportedPreviewSizes;
         Camera mCamera = CameraModule.getInstance();
+        Camera.Size use_size;
 
         CameraPreview(Context context, SurfaceView sv) {
             super(context);
@@ -65,6 +66,7 @@ public class EmptyFragment extends Fragment {
             mHolder = mSurfaceView.getHolder();
             mHolder.addCallback(this);
             mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            mHolder.setKeepScreenOn(true);
         }
 
         public void setCamera(Camera camera) {
@@ -83,16 +85,16 @@ public class EmptyFragment extends Fragment {
             }
         }
 
-        @Override
-        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-            final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-            final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
-            setMeasuredDimension(width, height);
-
-            if (mSupportedPreviewSizes != null) {
-                mPreviewSize = getOptimalPreviewSizes(mSupportedPreviewSizes, width, height);
-            }
-        }
+//        @Override
+//        protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//            final int width = resolveSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+//            final int height = resolveSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+//            setMeasuredDimension(width, height);
+//
+//            if (mSupportedPreviewSizes != null) {
+//                mPreviewSize = getOptimalPreviewSizes(mSupportedPreviewSizes, width, height);
+//            }
+//        }
 
         @Override
         protected void onLayout(boolean changed, int l, int t, int r, int b) {
@@ -137,7 +139,7 @@ public class EmptyFragment extends Fragment {
                 mCamera.stopPreview();
             }
         }
-
+//
         private Size getOptimalPreviewSizes(List<Size> sizes, int w, int h) {
             final double ASPECT_TOLERANCE = 0.1;
             double targetRatio = (double) w / h;
@@ -172,15 +174,20 @@ public class EmptyFragment extends Fragment {
         public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
             if (mCamera != null) {
                 Camera.Parameters parameters = mCamera.getParameters();
-                parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+                List<Camera.Size> supportedPreviewSizes = mCamera.getParameters().getSupportedPreviewSizes();
+                Camera.Size optimalPreviewSize = getOptimalPreviewSizes(supportedPreviewSizes, w, h);
+//                parameters.setPreviewSize(mPreviewSize.width, mPreviewSize.height);
+//                requestLayout();
+                if (optimalPreviewSize != null) {
+                    parameters.setPreviewSize(optimalPreviewSize.width, optimalPreviewSize.height);
+                    mCamera.setParameters(parameters);
+                    mCamera.startPreview();
+                }
                 requestLayout();
-
-                mCamera.setParameters(parameters);
-                mCamera.startPreview();
             }
         }
-
     }
+
 
     public static void setCameraDisplayOrientation(Activity activity,
                                                    int cameraId, android.hardware.Camera camera) {

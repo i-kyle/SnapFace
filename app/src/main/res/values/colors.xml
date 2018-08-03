@@ -10,6 +10,7 @@
     <color name = "black">#000000</color>
     <color name = "black_overlay">#66000000</color>
     <color name = "white_t75">#b4ffffff</color>
+    <color name="transparent">#00000000</color>
 
     <color name = "light_blue">#81d4fa</color>
     <color name = "light_purple">#ab47bc</color>

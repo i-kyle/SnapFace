@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:layout_gravity="top"
+    tools:background="@color/light_purple">
+
+    <FrameLayout
+        android:id="@+id/swipe_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/profile_pic"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="start|top"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/ic_profile_pic_24dp" />
+
+    <ImageView
+        android:id="@+id/flip_camera"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="end|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="24dp"
+        android:src="@drawable/ic_flip_camera_24dp"/>
+
+    <ImageView
+        android:id="@+id/magnify_search"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="start|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="63dp"
+        android:src="@drawable/ic_search_24dp"/>
+
+    <View
+        android:id="@+id/vsb_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/top_bar_break"/>
+
+    <LinearLayout
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_gravity="end|top"
+        android:layout_marginEnd="63dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/let_there_be_light"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_flash_off_24dp" />
+
+    </LinearLayout>
+
+    <TextSwitcher
+        android:id="@+id/text_switch"
+        android:layout_width="116dp"
+        android:layout_height="32dp"
+        android:layout_gravity="start|top"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="102dp" />
+
+</FrameLayout>

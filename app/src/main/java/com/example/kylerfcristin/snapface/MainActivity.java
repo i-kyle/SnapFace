@@ -3,11 +3,13 @@ package com.example.kylerfcristin.snapface;
 //import android.support.design.widget.TabLayout;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.kylerfcristin.snapface.adapter.MainPagerAdapter;
+import com.example.kylerfcristin.snapface.fragment.EmptyFragment;
 import com.example.kylerfcristin.snapface.view.SnapTabsView;
 
 
@@ -20,12 +22,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final android.view.View background = findViewById(R.id.am_background_view);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.am_view_pager);
-        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.am_view_pager);
+        final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter); // Every view pager must have adapter'
 
         SnapTabsView snapTabsView =(SnapTabsView) findViewById(R.id.am_snap_tabs);
         snapTabsView.setUpWithViewPager(viewPager);
+
+        snapTabsView.setOnTakePictureListener(new SnapTabsView.TakePictureListener() {
+            @Override
+            public void onTakePicture() {
+                // https://stackoverflow.com/questions/8785221/retrieve-a-fragment-from-a-viewpager
+                FragmentPagerAdapter fragmentPagerAdapter = (FragmentPagerAdapter) viewPager
+                        .getAdapter();
+                EmptyFragment emptyFragment = (EmptyFragment) fragmentPagerAdapter.getItem(1);
+                emptyFragment.takePhoto();
+            }
+        });
 
         viewPager.setCurrentItem(1);
 

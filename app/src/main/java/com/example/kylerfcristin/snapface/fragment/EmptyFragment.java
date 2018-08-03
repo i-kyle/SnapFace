@@ -2,10 +2,12 @@ package com.example.kylerfcristin.snapface.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.hardware.Camera.Size;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -18,10 +20,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -41,9 +41,11 @@ import static android.support.constraint.Constraints.TAG;
 // Empty Fragment
 // Transparent view that "sits" on top of camera
 public class EmptyFragment extends Fragment {
-
+    private static EmptyFragment fragment;
     public static EmptyFragment create() {
-        return new EmptyFragment();
+        if(fragment != null) return fragment;
+        fragment = new EmptyFragment();
+        return fragment;
     }
 
     class CameraPreview extends ViewGroup implements SurfaceHolder.Callback {
@@ -206,7 +208,6 @@ public class EmptyFragment extends Fragment {
     }
 
     CameraPreview preview;
-    Button buttonClick;
     Camera camera;
     Activity act;
     Context ctx;
@@ -225,14 +226,6 @@ public class EmptyFragment extends Fragment {
         ((FrameLayout) rootView.findViewById(R.id.layout)).addView(preview);
         preview.setKeepScreenOn(true);
 
-        preview.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                camera.takePicture(shutterCallback, rawCallback, jpegCallback);
-            }
-        });
-
         Toast.makeText(ctx, "Welcome", Toast.LENGTH_LONG).show();
         Log.d("EMPTY"," ttttt==========");
         return rootView;
@@ -245,9 +238,9 @@ public class EmptyFragment extends Fragment {
         if (numCams > 0) {
             try {
                 camera = open(0);
-                camera.startPreview();
                 preview.setCamera(camera);
                 setCameraDisplayOrientation(act, 0, camera);
+                Log.d("EMPTY", "==== camera set");
             } catch (RuntimeException ex) {
                 Log.d("EMPTY", "=== " + ex.getLocalizedMessage());
                 Toast.makeText(ctx, "Exception Toast " + ex.getLocalizedMessage(), Toast.LENGTH_LONG).show();
@@ -273,10 +266,17 @@ public class EmptyFragment extends Fragment {
         preview.setCamera(camera);
     }
 
+    public void takePhoto() {
+        if(camera != null) {
+            Log.d("EMPTY", "==== photo taken");
+            camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+        }
+    }
+
     private void refreshGallery(File file) {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        mediaScanIntent.setData(Uri.fromFile(file));
-//        sendBroadcast(mediaScanIntent);
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        mediaScanIntent.setData(Uri.fromFile(file));
+        ctx.sendBroadcast(mediaScanIntent);
     }
 
     ShutterCallback shutterCallback = new ShutterCallback() {

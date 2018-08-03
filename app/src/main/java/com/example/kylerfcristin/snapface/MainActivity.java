@@ -1,13 +1,18 @@
 package com.example.kylerfcristin.snapface;
 
 //import android.support.design.widget.TabLayout;
+
+import android.os.Bundle;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.example.kylerfcristin.snapface.adapter.MainPagerAdapter;
+import com.example.kylerfcristin.snapface.fragment.EmptyFragment;
 import com.example.kylerfcristin.snapface.view.SnapTabsView;
+
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,19 +22,30 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         final android.view.View background = findViewById(R.id.am_background_view);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.am_view_pager);
-        MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.am_view_pager);
+        final MainPagerAdapter adapter = new MainPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter); // Every view pager must have adapter'
 
-        SnapTabsView snapTabsView = findViewById(R.id.am_snap_tabs);
+        SnapTabsView snapTabsView =(SnapTabsView) findViewById(R.id.am_snap_tabs);
         snapTabsView.setUpWithViewPager(viewPager);
+
+        snapTabsView.setOnTakePictureListener(new SnapTabsView.TakePictureListener() {
+            @Override
+            public void onTakePicture() {
+                // https://stackoverflow.com/questions/8785221/retrieve-a-fragment-from-a-viewpager
+                FragmentPagerAdapter fragmentPagerAdapter = (FragmentPagerAdapter) viewPager
+                        .getAdapter();
+                EmptyFragment emptyFragment = (EmptyFragment) fragmentPagerAdapter.getItem(1);
+                emptyFragment.takePhoto();
+            }
+        });
 
         viewPager.setCurrentItem(1);
 
         final int colorBlue = ContextCompat.getColor(this, R.color.light_blue);
         final int colorPurple = ContextCompat.getColor(this, R.color.light_purple);
 
-        // For "tabs" not used int Snapchat
+        // For "tabs" not used in Snapchat
 //        TabLayout tabLayout = (TabLayout) findViewById(R.id.am_tab_layout);
 //        tabLayout.setupWithViewPager(viewPager);
 
@@ -59,3 +75,32 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+
+//public static Camera getCameraInstance() {
+//    Camera c = null;
+//    try {
+//        c = Camera.open();
+//    }
+//    catch (Exception e){
+//
+//    }
+//    return c;
+//}
+
+//public class CameraActivity extends Activity {
+//
+//    private Camera mCamera;
+//    private CameraPreview mPreview;
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.view_snap_tabs);
+//
+//        mCamera = getCameraInstance();
+//
+//        mPreview = new CameraPreview(this, mCamera);
+//        FrameLayout preview = findViewById(R.id.camera_preview);
+//        preview.addView(mPreview);
+//    }
+//}

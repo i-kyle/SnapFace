@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">SnapFace</string>
+    <string name="make_photo">Make Photo</string>
 </resources>

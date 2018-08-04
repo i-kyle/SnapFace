@@ -2,6 +2,7 @@ package com.example.kylerfcristin.snapface;
 
 //import android.support.design.widget.TabLayout;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -13,10 +14,12 @@ import com.example.kylerfcristin.snapface.fragment.EmptyFragment;
 import com.example.kylerfcristin.snapface.view.SnapBrowseView;
 import com.example.kylerfcristin.snapface.view.SnapTabsView;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
 
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 }
 
 //public static Camera getCameraInstance() {

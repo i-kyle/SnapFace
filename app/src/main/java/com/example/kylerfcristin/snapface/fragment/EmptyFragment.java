@@ -1,5 +1,6 @@
 package com.example.kylerfcristin.snapface.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -34,12 +35,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
 import static android.hardware.Camera.getNumberOfCameras;
 import static android.hardware.Camera.open;
 import static android.support.constraint.Constraints.TAG;
 
 // Empty Fragment
 // Transparent view that "sits" on top of camera
+@RuntimePermissions
 public class EmptyFragment extends Fragment {
     private static EmptyFragment fragment;
     public static EmptyFragment create() {
@@ -55,7 +60,7 @@ public class EmptyFragment extends Fragment {
         SurfaceHolder mHolder;
         Size mPreviewSize;
         List<Size> mSupportedPreviewSizes;
-        Camera mCamera = CameraModule.getInstance();
+        Camera mCamera;// = CameraModule.getInstance();
         Camera.Size use_size;
 
         CameraPreview(Context context, SurfaceView sv) {
@@ -241,6 +246,11 @@ public class EmptyFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        EmptyFragmentPermissionsDispatcher.camNumberWithPermissionCheck(this);
+    }
+
+    @NeedsPermission(Manifest.permission.CAMERA)
+    public void camNumber() {
         int numCams = getNumberOfCameras();
         if (numCams > 0) {
             try {
@@ -253,7 +263,6 @@ public class EmptyFragment extends Fragment {
                 Toast.makeText(ctx, "Exception Toast " + ex.getLocalizedMessage(), Toast.LENGTH_LONG).show();
             }
         }
-
     }
 
     @Override
@@ -278,6 +287,12 @@ public class EmptyFragment extends Fragment {
             Log.d("EMPTY", "==== photo taken");
             camera.takePicture(shutterCallback, rawCallback, jpegCallback);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EmptyFragmentPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     private void refreshGallery(File file) {

@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -25,15 +26,19 @@ public class SnapBrowseView extends FrameLayout implements ViewPager.OnPageChang
     private ImageView mSearch;
     private ImageView mLightSwitch;
 
+    private ArgbEvaluator mArgbEvaluator;
+
     private View mIndicator;
 
     private int mCenterColor;
     private int mSideColor;
 
-    private ArgbEvaluator mArgbEvaluator;
 
     private int mEndViewsTranslationX;
+    private int getmEndViewsTranslationY;
     private int mIndicatorTranslationX;
+    private int mLeftViewTranslationX;
+    private int mRightViewTranslationX;
     private int mCenterTranslationY;
 
     public SnapBrowseView(@NonNull Context context) {
@@ -53,16 +58,32 @@ public class SnapBrowseView extends FrameLayout implements ViewPager.OnPageChang
     private void browseInit() {
         LayoutInflater.from(getContext()).inflate(R.layout.view_snap_browse, this, true);
 
-        mLightSwitch = (ImageView) findViewById(R.id.let_there_be_light);
         mProfilePic = (ImageView) findViewById(R.id.profile_pic);
-        mCameraFlip = (ImageView) findViewById(R.id.flip_camera);
         mSearch = (ImageView) findViewById(R.id.magnify_search);
+        mLightSwitch = (ImageView) findViewById(R.id.let_there_be_light);
+        mCameraFlip = (ImageView) findViewById(R.id.flip_camera);
 
         mIndicator = findViewById(R.id.vsb_indicator);
 
         mCenterColor = ContextCompat.getColor(getContext(), R.color.white);
         mSideColor = ContextCompat.getColor(getContext(), R.color.transparent);
         mArgbEvaluator = new ArgbEvaluator();
+
+        mLightSwitch.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mEndViewsTranslationX = (int) ((mLightSwitch.getX() - mSearch.getX()));
+                mLightSwitch.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+
+        mCameraFlip.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mEndViewsTranslationX = (int) ((mLightSwitch.getX() - mSearch.getX()));
+                mCameraFlip.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
     }
 
     public void setUpWithViewPager_Browse(final ViewPager viewPager_browse) {
@@ -118,7 +139,7 @@ public class SnapBrowseView extends FrameLayout implements ViewPager.OnPageChang
         int color = (int) mArgbEvaluator.evaluate(fractionFromCenter, mCenterColor, mSideColor);
 
         mCameraFlip.setColorFilter(color);
-//        mLightSwitch.setColorFilter(color);
+        mLightSwitch.setColorFilter(color);
 
     }
 
